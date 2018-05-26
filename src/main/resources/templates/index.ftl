@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -31,23 +30,25 @@
     </div>
   </div>
   <main role="main" class="inner cover">
-    <form action="/" method="POST">
+    <form action="/" method="POST" enctype="multipart/form-data">
       <div class="form-row mb-1">
         <div class="form-group col-12">
-          <label class="text-white">Delimiter</label>
+          <label class="text-white">Delimiter or Type</label>
           <select class="form-control" name="delimiter" id="delimiter">
             <option value="tab">Tab</option>
             <option value="comma">,</option>
             <option value="space">Space</option>
+            <option value="xlsx">ExcelFile</option>
           </select>
-          <script>
-            <#if delimiter??>
-              $("#delimiter").val("${delimiter}");
-            </#if>
-          </script>
         </div>
       </div>
-      <div class="form-row mb-1">
+      <div class="form-row mb-1" id="fileContainer">
+        <div class="form-group col-12">
+          <label class="text-white">File</label>
+          <input class="form-control" type="file" name="file" id="file">
+        </div>
+      </div>
+      <div class="form-row mb-1" id="dataContainer">
         <div class="form-group col-12">
           <label class="text-white">Data</label>
           <textarea class="form-control" name="data" rows="5">${data!""}</textarea>
@@ -55,7 +56,8 @@
       </div>
       <div class="form-row mb-1">
         <div class="form-group col-12">
-          <label class="text-white">Template(<a href="https://freemarker.apache.org/docs/index.html">Freemarker</a>)</label>
+          <label class="text-white">Template(<a
+                  href="https://freemarker.apache.org/docs/index.html">Freemarker</a>)</label>
           <textarea class="form-control" name="format">${format!""}</textarea>
         </div>
       </div>
@@ -87,6 +89,32 @@
 
 
 </div>
+<script>
+  function statusRefresh() {
+    var val = delimiterSelect.val();
+    var fileContainer = $("#fileContainer");
+    var dataContainer = $("#dataContainer");
+    if (val === 'xlsx') {
+      fileContainer.show();
+      dataContainer.hide();
+    } else {
+      fileContainer.hide();
+      dataContainer.show();
+    }
+  }
+
+  var delimiterSelect = $("#delimiter");
+  delimiterSelect.change(function () {
+    statusRefresh();
+  });
+
+  <#if delimiter??>
+    delimiterSelect.val("${delimiter}");
+  </#if>
+
+  statusRefresh();
+
+</script>
 
 </body>
 </html>
